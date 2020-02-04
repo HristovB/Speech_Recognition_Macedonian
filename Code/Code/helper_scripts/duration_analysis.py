@@ -31,7 +31,7 @@ for index, row in df.iterrows():
 
 sub1 = df_new.loc[(df_new['key']=='1') | (df_new['key']=='3')]
 sub1 = pd.DataFrame()
-sub1 = df_new.loc[¬((df_new['key']=='1') | (df_new['key']=='3') | (df_new['key']=='6') | (df_new['key']=='9') | (df_new['key']=='12')]
+sub1 = df_new.loc[((df_new['key']=='1') | (df_new['key']=='3') | (df_new['key']=='6') | (df_new['key']=='9') | (df_new['key']=='12')]
 
 for index,row in sub1.iterrows():
     if row['duration'] > 20:
