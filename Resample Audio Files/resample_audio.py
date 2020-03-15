@@ -8,7 +8,7 @@ def resample_audio(path, sampling_rate, verbose=False):
 
     Parameters:
         path (string): String variable containing the path to a main folder (containing multiple batches of audio)
-        sampling_rate (int): Integer value to determine the desired sampling rate (ex: 16kHz ==> sampling_rate = 16000)
+        sampling_rate (int): Integer variable containing the value of the desired sampling rate (ex: 16kHz ==> sampling_rate = 16000)
         verbose (bool): Boolean variable to determine whether to print the progress of the function
 
     Returns:
