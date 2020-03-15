@@ -55,6 +55,7 @@ def rename_files(path, verbose=False):
             file_count = reset()
             if verbose:
                 print('Batch done!')
+                print()
 
         if verbose:
             print('Folder done!')
@@ -62,6 +63,7 @@ def rename_files(path, verbose=False):
 
     if verbose:
         print('Renaming Successful!')
+        print()
 
 
 if __name__ == '__main__':

@@ -38,9 +38,11 @@ def resample_audio(path, sampling_rate, verbose=False):
 
         if verbose:
             print('Batch done!')
+            print()
 
     if verbose:
         print('Resampling Successful!')
+        print()
 
 
 if __name__ == '__main__':
