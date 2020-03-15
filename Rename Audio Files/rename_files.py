@@ -11,6 +11,16 @@ def reset():
 
 
 def rename_files(path):
+    """"
+    This function is for renaming the files, as per an agreed upon convention, to allow for easier reading.
+
+    Parameters:
+        path (string): String variable containing the path to the main data folder (containing multiple folders of batches)
+
+    Returns:
+        None
+
+    """
 
     folder_list = os.listdir(path)
     file_count = reset()
