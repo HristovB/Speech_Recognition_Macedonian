@@ -27,4 +27,13 @@ def resample_audio(path):
 
 if __name__ == '__main__':
 
-    resample_audio(path='F:\\Speech_Recognition_Macedonian\\Database\\train\\2')
+    data_path = 'F:\\Speech_Recognition_Macedonian\\Database\\train'
+
+    for folder in os.listdir(data_path):
+
+        print('Loading folder', folder, '...')
+
+        resample_audio(path=data_path + os.sep + folder)
+
+        print('Folder', folder, 'done!')
+        print()
