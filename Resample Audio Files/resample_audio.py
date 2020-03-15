@@ -51,7 +51,6 @@ if __name__ == '__main__':
     rate = 16000
 
     for folder in os.listdir(data_path):
-
         print('Loading folder', folder, '...')
 
         resample_audio(path=data_path + os.sep + folder, sampling_rate=rate)
