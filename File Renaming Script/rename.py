@@ -12,7 +12,7 @@ def reset():
 
 if __name__ == '__main__':
 
-    path = '/home/bhristov/pyAudioAnalysis/pyAudioAnalysis/audio_segmentation'
+    path = 'F:\\Speech_Recognition_Macedonian\\Database\\train'
     folder_list = os.listdir(path)
     file_count = reset()
 
@@ -23,7 +23,7 @@ if __name__ == '__main__':
             file_list = sorted(os.listdir(path + os.sep + folder + os.sep + batch))
 
             for file in file_list:
-                if file.endswith('.mp3'):
+                if not file.endswith('.wav'):
                     continue
 
                 new_name = folder + '-' + batch + '-' + str(file_count) + '.wav'
