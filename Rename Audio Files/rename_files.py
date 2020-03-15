@@ -10,12 +10,13 @@ def reset():
     return format(0, '04d')
 
 
-def rename_files(path):
+def rename_files(path, verbose=False):
     """"
     This function is for renaming the files, as per an agreed upon convention, to allow for easier reading.
 
     Parameters:
         path (string): String variable containing the path to the main data folder (containing multiple folders of batches)
+        verbose (bool): Boolean variable to determine whether to print the progress of the function
 
     Returns:
         None
@@ -25,15 +26,19 @@ def rename_files(path):
     folder_list = os.listdir(path)
     file_count = reset()
 
-    print('Renaming...')
+    if verbose:
+        print('Renaming...')
+        print()
 
     for folder in folder_list:
-        print('Loading folder', folder, '...')
+        if verbose:
+            print('Loading folder', folder, '...')
 
         batch_list = sorted(os.listdir(path + os.sep + folder))
 
         for batch in batch_list:
-            print('Loading batch', batch, '...')
+            if verbose:
+                print('Loading batch', batch, '...')
 
             file_list = sorted(os.listdir(path + os.sep + folder + os.sep + batch))
 
@@ -48,12 +53,15 @@ def rename_files(path):
                           path + os.sep + folder + os.sep + batch + os.sep + new_name)
 
             file_count = reset()
-            print('Batch done!')
+            if verbose:
+                print('Batch done!')
 
-        print('Folder done!')
-        print()
+        if verbose:
+            print('Folder done!')
+            print()
 
-    print('Renaming Successful!')
+    if verbose:
+        print('Renaming Successful!')
 
 
 if __name__ == '__main__':
