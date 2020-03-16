@@ -10,7 +10,7 @@ def generate_mfcc(path, sampling_rate, num_coeff, folder_name, verbose=False):
     This function is for generating the mel-frequency cepstral coefficients.
 
     Parameters:
-        path (string): String variable containing the path to the main data folder (containing multiple folders of batches)
+        path (string): String variable containing the path to the main data folder (containing multiple folders of batches of audio)
         sampling_rate (int): Integer variable containing the sampling rate of the audio(ex: 16kHz ==> sampling_rate = 16000)
         num_coeff (int): Integer variable containing the number of mel-frequency cepstral coefficients to be generated (number of features)
         folder_name (string): String variable containing the name of the folder where the multiple batch folders are located in

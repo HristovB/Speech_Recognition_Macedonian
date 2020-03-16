@@ -7,7 +7,7 @@ def rename_files(path, verbose=False):
     This function is for renaming the files, as per an agreed upon convention, to allow for easier reading.
 
     Parameters:
-        path (string): String variable containing the path to the main data folder (containing multiple folders of batches)
+        path (string): String variable containing the path to the main data folder (containing multiple folders of batches of audio)
         verbose (bool): Boolean variable to determine whether to print the progress of the function
 
     Returns:
