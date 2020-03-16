@@ -7,7 +7,7 @@ def increment_batch(number):
 
 
 def reset_batch():
-    return format(1, '06d')
+    return format(0, '06d')
 
 
 def increment_file(number):
@@ -93,4 +93,4 @@ if __name__ == '__main__':
 
     data_path = 'F:\\Speech_Recognition_Macedonian\\Database\\train'
 
-    rename_files(data_path, verbose=True)
+    rename_files(data_path)
