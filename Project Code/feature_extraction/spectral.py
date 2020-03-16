@@ -2,7 +2,7 @@ import os
 import librosa as lb
 import numpy as np
 from python_speech_features import mfcc
-from utils import find_batch_maximum
+from utils.utils import find_batch_maximum
 
 
 def generate_mfcc(path, sampling_rate, num_coeff, folder_name, verbose=False):
