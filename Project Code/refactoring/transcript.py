@@ -7,7 +7,7 @@ def rename_transcripts(path, verbose=False):
     This function is for renaming the transcript text files, as per an agreed upon convention, to allow for easier reading.
 
     Parameters:
-        path (string): String variable containing the path to the main data folder (containing multiple folders of batches of audio)
+        path (string): String variable containing the path to the main data folder (containing multiple folders of literature works, which contain multiple folders of batches of audio)
         verbose (bool): Boolean variable to determine whether to print the progress of the function
 
     Returns:
@@ -44,11 +44,11 @@ def rename_transcripts(path, verbose=False):
                       path + os.sep + folder + os.sep + batch + os.sep + new_name)
 
             if verbose:
-                print('Batch done!')
+                print('Batch', batch, 'done!')
                 print()
 
         if verbose:
-            print('Folder done!')
+            print('Folder', folder, 'done!')
             print()
 
     if verbose:
@@ -61,7 +61,7 @@ def index_transcripts(path, verbose=False):
     This function is for proper indexing of the transcript text files, as per an agreed upon convention, to allow for easier reading.
 
     Parameters:
-        path (string): String variable containing the path to the main data folder (containing multiple folders of batches)
+        path (string): String variable containing the path to the main data folder (containing multiple folders of literature works, which contain multiple folders of batches of audio)
         verbose (bool): Boolean variable to determine whether to print the progress of the function
 
     Returns:

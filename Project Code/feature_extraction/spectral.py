@@ -10,7 +10,7 @@ def generate_mfcc(path, sampling_rate, num_coeff, folder_name, verbose=False):
     This function is for generating the mel-frequency cepstral coefficients.
 
     Parameters:
-        path (string): String variable containing the path to the main data folder (containing multiple folders of batches of audio)
+        path (string): String variable containing the path to the main data folder (containing multiple folders of literature works, which contain multiple folders of batches of audio)
         sampling_rate (int): Integer variable containing the sampling rate of the audio(ex: 16kHz ==> sampling_rate = 16000)
         num_coeff (int): Integer variable containing the number of mel-frequency cepstral coefficients to be generated (number of features)
         folder_name (string): String variable containing the name of the folder where the multiple batch folders are located in
@@ -21,41 +21,51 @@ def generate_mfcc(path, sampling_rate, num_coeff, folder_name, verbose=False):
 
     """
 
+    folder_list = os.listdir(path)
+
     if verbose:
         print('Generating MFCC...')
         print()
 
-    batch_list = sorted(os.listdir(path))
-
-    for batch in batch_list:
+    for folder in folder_list:
         if verbose:
-            print('Loading next batch...')
+            print('Loading folder', folder, '...')
 
-        file_list = sorted(os.listdir(path + os.sep + batch))
+        batch_list = sorted(os.listdir(path + os.sep + folder))
 
-        count = len(file_list) - 1
-        maximum = find_batch_maximum(path=path + os.sep + batch, sampling_rate=sampling_rate, num_coeff=13, verbose=True)
+        for batch in batch_list:
+            if verbose:
+                print('Loading next batch...')
 
-        batch_mfcc = np.empty((maximum, 13, count))
-        num_file = 0
+            file_list = sorted(os.listdir(path + os.sep + folder + os.sep + batch))
 
-        for file in file_list:
-            if not file.endswith('.wav'):
-                continue
+            count = len(file_list) - 1
+            maximum = find_batch_maximum(path=path + os.sep + folder + os.sep + batch, sampling_rate=sampling_rate, num_coeff=13, verbose=True)
 
-            audio, _ = lb.load(path + os.sep + batch + os.sep + file, sr=sampling_rate)
+            batch_mfcc = np.empty((maximum, 13, count))
+            num_file = 0
 
-            mfcc_data = mfcc(signal=audio, samplerate=sampling_rate, numcep=num_coeff)
-            mfcc_data = np.pad(mfcc_data, ((0, maximum - len(mfcc_data)), (0, 0)), 'constant', constant_values=np.nan)
+            for file in file_list:
+                if not file.endswith('.wav'):
+                    continue
 
-            batch_mfcc[:, :, num_file] = mfcc_data
+                audio, _ = lb.load(path + os.sep + folder + os.sep + batch + os.sep + file, sr=sampling_rate)
 
-            num_file = num_file + 1
+                mfcc_data = mfcc(signal=audio, samplerate=sampling_rate, numcep=num_coeff)
+                mfcc_data = np.pad(mfcc_data, ((0, maximum - len(mfcc_data)), (0, 0)), 'constant', constant_values=np.nan)
 
-        np.save(path + os.sep + batch + os.sep + folder_name + '-' + batch + '_mfcc', batch_mfcc)
+                batch_mfcc[:, :, num_file] = mfcc_data
+
+                num_file = num_file + 1
+
+            np.save(path + os.sep + folder + os.sep + batch + os.sep + folder_name + '-' + batch + '_mfcc', batch_mfcc)
+
+            if verbose:
+                print('Batch', batch, 'done!')
+                print()
 
         if verbose:
-            print('Batch done!')
+            print('Folder', folder, 'done!')
             print()
 
     if verbose:
