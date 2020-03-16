@@ -1,12 +1,21 @@
 import os
 
 
-def increment(number):
+def increment_batch(number):
+    number = int(number) + 1
+    return format(number, '06d')
+
+
+def reset_batch():
+    return format(1, '06d')
+
+
+def increment_file(number):
     number = int(number) + 1
     return format(number, '04d')
 
 
-def reset():
+def reset_file():
     return format(0, '04d')
 
 
@@ -23,8 +32,11 @@ def rename_files(path, verbose=False):
 
     """
 
+    folder_count = 1
+    batch_count = reset_batch()
+    file_count = reset_file()
+
     folder_list = os.listdir(path)
-    file_count = reset()
 
     if verbose:
         print('Renaming...')
@@ -34,29 +46,40 @@ def rename_files(path, verbose=False):
         if verbose:
             print('Loading folder', folder, '...')
 
-        batch_list = sorted(os.listdir(path + os.sep + folder))
+        new_folder_name = str(folder_count)
+        folder_count = folder_count + 1
+
+        os.rename(path + os.sep + folder, path + os.sep + new_folder_name)
+
+        batch_list = sorted(os.listdir(path + os.sep + new_folder_name))
 
         for batch in batch_list:
             if verbose:
                 print('Loading batch', batch, '...')
 
-            file_list = sorted(os.listdir(path + os.sep + folder + os.sep + batch))
+            new_batch_name = str(batch_count)
+            batch_count = increment_batch(batch_count)
+
+            os.rename(path + os.sep + new_folder_name + os.sep + batch, path + os.sep + new_folder_name + os.sep + new_batch_name)
+
+            file_list = sorted(os.listdir(path + os.sep + new_folder_name + os.sep + new_batch_name))
 
             for file in file_list:
                 if not file.endswith('.wav'):
                     continue
 
-                new_name = folder + '-' + batch + '-' + str(file_count) + '.wav'
-                file_count = increment(file_count)
+                new_name = new_folder_name + '-' + new_batch_name + '-' + str(file_count) + '.wav'
+                file_count = increment_file(file_count)
 
-                os.rename(path + os.sep + folder + os.sep + batch + os.sep + file,
-                          path + os.sep + folder + os.sep + batch + os.sep + new_name)
+                os.rename(path + os.sep + new_folder_name + os.sep + new_batch_name + os.sep + file,
+                          path + os.sep + new_folder_name + os.sep + new_batch_name + os.sep + new_name)
 
-            file_count = reset()
+            file_count = reset_file()
             if verbose:
                 print('Batch done!')
                 print()
 
+        batch_count = reset_batch()
         if verbose:
             print('Folder done!')
             print()
@@ -70,4 +93,4 @@ if __name__ == '__main__':
 
     data_path = 'F:\\Speech_Recognition_Macedonian\\Database\\train'
 
-    rename_files(data_path)
+    rename_files(data_path, verbose=True)
