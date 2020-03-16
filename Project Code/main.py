@@ -13,4 +13,4 @@ if __name__ == '__main__':
 
     # mfcc_dat = np.load(data_path + os.sep + '1' + os.sep + '000001' + os.sep + '1-000001_mfcc.npy')
 
-    resample_audio(path=data_path, sampling_rate=rate, verbose=True)
+    generate_mfcc(path=data_path, sampling_rate=rate, num_coeff=coeff, verbose=True)
