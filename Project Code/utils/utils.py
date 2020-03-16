@@ -1,5 +1,6 @@
 import os
 import librosa as lb
+import re
 from python_speech_features import mfcc
 
 
@@ -206,3 +207,21 @@ def reset_file():
     """
 
     return format(0, '04d')
+
+
+def is_indexed(transcript):
+    """"
+    This function is for checking if the transcript files already contain indexing (old dataset), as per agreed upon convention.
+
+    Parameters:
+        transcript (list): List variable containing the transcript file text, divided  by new-line characters
+
+    Returns:
+        bool: Boolean value as to whether the indexing is present or not
+
+    """
+
+    if bool(re.match(r'﻿?[0-9]-[0-9]{6}-[0-9]{4}', transcript[0][0])):
+        return True
+    else:
+        return False

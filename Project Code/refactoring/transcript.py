@@ -1,5 +1,5 @@
 import os
-from utils.utils import increment_file, reset_file
+from utils.utils import increment_file, reset_file, is_indexed
 
 
 def rename_transcripts(path, verbose=False):
@@ -99,6 +99,11 @@ def index_transcripts(path, verbose=False):
             file_contents = src.read()
 
             transcript_array = [element.split(' ', 1) for element in file_contents.strip().split('\n')]
+
+            if is_indexed(transcript_array):
+                transcript_array = [element.split(' ', 1) for element in file_contents.strip().split('\n')]
+            else:
+                transcript_array = [[element] for element in file_contents.strip().split('\n')]
 
             num_files = len(transcript_array) - 1
             count = 0
