@@ -1,3 +1,0 @@
-The average error rate per utterance is: 0.5295098009252613
-The total error rate is: 0.5319564156773459
-Lines: 227
