@@ -1,0 +1,60 @@
+model_2 = cnn_rnn_model(input_dim=161,
+                        filters=30,
+                        kernel_size=2, 
+                        conv_stride=1,
+                        conv_border_mode='valid',
+                        units=50)
+
+train_model(input_to_softmax=model_2, 
+            pickle_path='model_cnn_rnn_12_50gru_30f.pickle', 
+            save_model_path='model_cnn_rnn_12_50gru_30f.h5', 
+            spectrogram=True) # change to False if you would like to use MFCC features
+WARNING:tensorflow:From C:\Users\pc\Anaconda3\envs\tf_gpu\lib\site-packages\keras\backend\tensorflow_backend.py:4249: to_int32 (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.cast instead.
+WARNING:tensorflow:From C:\Users\pc\Anaconda3\envs\tf_gpu\lib\site-packages\keras\backend\tensorflow_backend.py:4229: to_int64 (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.cast instead.
+WARNING:tensorflow:From C:\Users\pc\Anaconda3\envs\tf_gpu\lib\site-packages\tensorflow\python\ops\math_grad.py:102: div (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Deprecated in favor of operator or tf.math.divide.
+Epoch 1/20
+601/601 [==============================] - 878s 1s/step - loss: 335.2287 - val_loss: 300.8777
+Epoch 2/20
+601/601 [==============================] - 890s 1s/step - loss: 180.3222 - val_loss: 204.3102
+Epoch 3/20
+601/601 [==============================] - 894s 1s/step - loss: 123.8615 - val_loss: 184.2434
+Epoch 4/20
+601/601 [==============================] - 895s 1s/step - loss: 109.3679 - val_loss: 175.7457
+Epoch 5/20
+601/601 [==============================] - 899s 1s/step - loss: 101.5748 - val_loss: 174.2416
+Epoch 6/20
+601/601 [==============================] - 891s 1s/step - loss: 96.3718 - val_loss: 170.2912
+Epoch 7/20
+601/601 [==============================] - 898s 1s/step - loss: 92.6071 - val_loss: 159.5907
+Epoch 8/20
+601/601 [==============================] - 899s 1s/step - loss: 89.6744 - val_loss: 162.1986
+Epoch 9/20
+601/601 [==============================] - 897s 1s/step - loss: 87.2317 - val_loss: 156.7982
+Epoch 10/20
+601/601 [==============================] - 896s 1s/step - loss: 85.2835 - val_loss: 161.5622
+Epoch 11/20
+601/601 [==============================] - 896s 1s/step - loss: 83.2579 - val_loss: 154.4969
+Epoch 12/20
+601/601 [==============================] - 896s 1s/step - loss: 81.3534 - val_loss: 159.1145
+Epoch 13/20
+601/601 [==============================] - 896s 1s/step - loss: 79.7487 - val_loss: 153.5157
+Epoch 14/20
+601/601 [==============================] - 903s 2s/step - loss: 78.0800 - val_loss: 148.4761
+Epoch 15/20
+601/601 [==============================] - 919s 2s/step - loss: 76.8261 - val_loss: 148.2057
+Epoch 16/20
+601/601 [==============================] - 938s 2s/step - loss: 75.6855 - val_loss: 146.5483
+Epoch 17/20
+601/601 [==============================] - 935s 2s/step - loss: 74.7475 - val_loss: 148.3669
+Epoch 18/20
+601/601 [==============================] - 939s 2s/step - loss: 74.0874 - val_loss: 148.4599
+Epoch 19/20
+601/601 [==============================] - 941s 2s/step - loss: 73.3503 - val_loss: 149.2932
+Epoch 20/20
+601/601 [==============================] - 933s 2s/step - loss: 72.5857 - val_loss: 139.4735

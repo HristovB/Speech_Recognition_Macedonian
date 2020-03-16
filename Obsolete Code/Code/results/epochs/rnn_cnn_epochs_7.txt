@@ -1,0 +1,51 @@
+model_2 = cnn_rnn_model(input_dim=161,
+                        filters=8,
+                        kernel_size=2, 
+                        conv_stride=2,
+                        conv_border_mode='valid',
+                        units=32)
+
+train_model(input_to_softmax=model_2, 
+            pickle_path='model_cnn_rnn_7.pickle', 
+            save_model_path='model_cnn_rnn_7.h5', 
+            spectrogram=True)
+Epoch 1/20
+566/566 [==============================] - 532s 941ms/step - loss: 314.7497 - val_loss: nan
+Epoch 2/20
+566/566 [==============================] - 579s 1s/step - loss: 222.7264 - val_loss: nan
+Epoch 3/20
+566/566 [==============================] - 607s 1s/step - loss: 202.7321 - val_loss: nan
+Epoch 4/20
+566/566 [==============================] - 595s 1s/step - loss: 182.7388 - val_loss: nan
+Epoch 5/20
+566/566 [==============================] - 580s 1s/step - loss: 165.5359 - val_loss: nan
+Epoch 6/20
+566/566 [==============================] - 582s 1s/step - loss: 152.4074 - val_loss: nan
+Epoch 7/20
+566/566 [==============================] - 583s 1s/step - loss: 144.0975 - val_loss: nan
+Epoch 8/20
+566/566 [==============================] - 577s 1s/step - loss: 138.7765 - val_loss: nan
+Epoch 9/20
+566/566 [==============================] - 580s 1s/step - loss: 135.3537 - val_loss: nan
+Epoch 10/20
+566/566 [==============================] - 633s 1s/step - loss: 132.5890 - val_loss: nan
+Epoch 11/20
+566/566 [==============================] - 583s 1s/step - loss: 130.3600 - val_loss: nan
+Epoch 12/20
+566/566 [==============================] - 583s 1s/step - loss: 128.5224 - val_loss: nan
+Epoch 13/20
+566/566 [==============================] - 605s 1s/step - loss: 126.8685 - val_loss: nan
+Epoch 14/20
+566/566 [==============================] - 601s 1s/step - loss: 125.3313 - val_loss: nan
+Epoch 15/20
+566/566 [==============================] - 579s 1s/step - loss: 123.8695 - val_loss: nan
+Epoch 16/20
+566/566 [==============================] - 595s 1s/step - loss: 122.5993 - val_loss: nan
+Epoch 17/20
+566/566 [==============================] - 612s 1s/step - loss: 121.1697 - val_loss: nan
+Epoch 18/20
+566/566 [==============================] - 700s 1s/step - loss: 119.9535 - val_loss: nan
+Epoch 19/20
+566/566 [==============================] - 688s 1s/step - loss: 118.9668 - val_loss: nan
+Epoch 20/20
+566/566 [==============================] - 708s 1s/step - loss: 117.8096 - val_loss: nan
