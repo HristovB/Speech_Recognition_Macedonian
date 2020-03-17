@@ -198,5 +198,5 @@ def refactor_all(path, verbose=False):
     rename_transcripts(path)
 
     if verbose:
-        print('Indexing Successful!')
+        print('Refactoring Successful!')
         print()

@@ -31,4 +31,4 @@ if __name__ == '__main__':
 
     # generate_mfcc(path=data_path, sampling_rate=rate, num_coeff=coeff, verbose=True)
 
-    format_transcript(path=data_path + os.sep + '1' + os.sep + '000000' + os.sep + 'trans.txt')
+    refactor_all(path=data_path, verbose=True)
