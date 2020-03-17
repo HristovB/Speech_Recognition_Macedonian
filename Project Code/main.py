@@ -1,3 +1,15 @@
+"""
+Main execution file
+
+Copyright 2020 by Blagoj Hristov
+
+See the LICENSE file for the licensing associated with this software.
+
+Author:
+  Blagoj Hristov, March 2020
+
+"""
+
 import os
 import numpy as np
 from feature_extraction.spectral import generate_mfcc
