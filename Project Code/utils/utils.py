@@ -217,7 +217,7 @@ def is_indexed(transcript):
         return False
 
 
-def load_mfcc(path):
+def load_mfcc_batch(path):
     """"
     This function is for batchwise loading of the generated MFCC features into a list of 2D NumPy matrices.
 
@@ -240,3 +240,5 @@ def load_mfcc(path):
         batch_mfcc.append(file_mfcc)
 
     return batch_mfcc
+
+

@@ -11,6 +11,7 @@ Author:
 """
 
 import os
+import regex.regex as re
 from utils.utils import increment_file, reset_file, is_indexed
 
 
@@ -45,10 +46,10 @@ def rename_transcripts(path, verbose=False):
 
             file_list = sorted([file for file in os.listdir(path + os.sep + folder + os.sep + batch) if file.endswith('.txt')])
 
-            if len(file_list) == 2:
-                original_name = file_list[0]
-                os.remove(path + os.sep + folder + os.sep + batch + os.sep + file_list[0])
-                os.rename(path + os.sep + folder + os.sep + batch + os.sep + file_list[1], path + os.sep + folder + os.sep + batch + os.sep + original_name)
+            if len(file_list) > 1:
+                for extra_file in file_list[1:]:
+                    os.remove(path + os.sep + folder + os.sep + batch + os.sep + extra_file)
+                file_list = [file_list[0]]
 
             new_name = folder + '-' + batch + '-' + 'trans' + '.txt'
 
@@ -68,9 +69,90 @@ def rename_transcripts(path, verbose=False):
         print()
 
 
-def index_transcripts(path, verbose=False):
+def index_transcript(path, folder, batch):
     """"
-    This function is for proper indexing of the transcript text files, as per an agreed upon convention, to allow for easier reading.
+    This function is for proper indexing a single transcript file, as per an agreed upon convention, to allow for easier reading.
+
+    Parameters:
+        path (string): String variable containing the path to the transcript .txt file
+        folder (string): String variable of the name of the folder containing multiple batch folders (used for naming convention)
+        batch (string): String variable of the name of the batch folder containing the transcript .txt file to be indexed (used for naming convention)
+
+    Returns:
+        Creates a new .txt file containing the indexed contents of the original
+
+    """
+
+    file_count = reset_file()
+
+    src = open(path, mode='r', encoding='utf-8')
+    dst = open(path[:-4] + '-indexed.txt', mode='w', encoding='utf-8')
+
+    transcript = src.read()
+
+    transcript_array = [element.split(' ', 1) for element in transcript.strip().split('\n')]
+
+    if is_indexed(transcript_array):
+        transcript_array = [element.split(' ', 1) for element in transcript.strip().split('\n')]
+    else:
+        transcript_array = [[element] for element in transcript.strip().split('\n')]
+
+    num_lines = len(transcript_array) - 1
+    count = 0
+
+    for row in transcript_array:
+        transcript = row[-1]
+        indexing = folder + '-' + batch + '-' + file_count
+
+        if count == num_lines:
+            new_indexing = indexing + ' ' + transcript
+        else:
+            new_indexing = indexing + ' ' + transcript + '\n'
+
+        dst.write(new_indexing)
+
+        file_count = increment_file(file_count)
+        count = count + 1
+
+    src.close()
+    dst.close()
+
+
+def format_transcript(path):
+    """"
+    This function is for converting the transcript text to all uppercase letters and removing all special characters (except for whitespace and newline characters), as per agreed upon convention.
+
+    Parameters:
+        path (string): String variable containing the path to the transcript .txt file
+
+    Returns:
+        Creates a new .txt file containing the formatted contents of the original
+
+    """
+
+    src = open(path, mode='r', encoding='utf-8')
+    dst = open(path[:-4] + '-formatted.txt', mode='w', encoding='utf-8')
+
+    transcript = src.read()
+
+    transcript_array = [element.split(' ', 1) for element in transcript.strip().split('\n')]
+
+    if is_indexed(transcript_array):
+        transcript = re.sub('[^\\p{L} \n\\d-]', '', transcript)
+    else:
+        transcript = re.sub('[^\\p{L} \n]', '', transcript)
+
+    transcript = transcript.upper()
+
+    dst.write(transcript)
+
+    src.close()
+    dst.close()
+
+
+def refactor_all(path, verbose=False):
+    """"
+    This function is for proper formatting and indexing of all of the transcript text files located in the main data folder, as per an agreed upon convention, to allow for easier reading.
 
     Parameters:
         path (string): String variable containing the path to the main data folder (containing multiple folders of literature works, which contain multiple folders of batches of audio)
@@ -82,7 +164,6 @@ def index_transcripts(path, verbose=False):
     """
 
     folder_list = os.listdir(path)
-    file_count = reset_file()
 
     if verbose:
         print('Indexing...')
@@ -100,43 +181,11 @@ def index_transcripts(path, verbose=False):
 
             file_list = sorted([file for file in os.listdir(path + os.sep + folder + os.sep + batch) if file.endswith('.txt')])
 
-            src = open(path + os.sep + folder + os.sep + batch + os.sep + file_list[0], mode='r', encoding='utf-8')
+            format_transcript(path=path + os.sep + folder + os.sep + batch + os.sep + file_list[0])
 
-            if len(file_list) == 1:
-                dst = open(path + os.sep + folder + os.sep + batch + os.sep + 'new_' + file_list[0], mode='w', encoding='utf-8')
+            file_list = sorted([file for file in os.listdir(path + os.sep + folder + os.sep + batch) if file.endswith('.txt')])
 
-            else:
-                dst = open(path + os.sep + folder + os.sep + batch + os.sep + file_list[1], mode='w', encoding='utf-8')
-
-            file_contents = src.read()
-
-            transcript_array = [element.split(' ', 1) for element in file_contents.strip().split('\n')]
-
-            if is_indexed(transcript_array):
-                transcript_array = [element.split(' ', 1) for element in file_contents.strip().split('\n')]
-            else:
-                transcript_array = [[element] for element in file_contents.strip().split('\n')]
-
-            num_files = len(transcript_array) - 1
-            count = 0
-
-            for row in transcript_array:
-                transcript = row[-1]
-                indexing = folder + '-' + batch + '-' + file_count
-
-                if count == num_files:
-                    new_indexing = indexing + ' ' + transcript
-                else:
-                    new_indexing = indexing + ' ' + transcript + '\n'
-
-                dst.write(new_indexing)
-
-                file_count = increment_file(file_count)
-                count = count + 1
-
-            src.close()
-            dst.close()
-            file_count = reset_file()
+            index_transcript(path=path + os.sep + folder + os.sep + batch + os.sep + file_list[0], folder=folder, batch=batch)
 
             if verbose:
                 print('Batch done!')
