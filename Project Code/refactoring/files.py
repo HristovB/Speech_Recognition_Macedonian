@@ -11,6 +11,7 @@ Author:
 """
 
 import os
+from natsort import natsorted, ns
 from utils.utils import increment_file, reset_file, increment_batch, reset_batch
 
 
@@ -57,7 +58,8 @@ def rename_files(path, verbose=False):
 
             os.rename(path + os.sep + new_folder_name + os.sep + batch, path + os.sep + new_folder_name + os.sep + new_batch_name)
 
-            file_list = sorted(os.listdir(path + os.sep + new_folder_name + os.sep + new_batch_name))
+            file_list = os.listdir(path + os.sep + new_folder_name + os.sep + new_batch_name)
+            file_list = natsorted(file_list, alg=ns.PATH | ns.IGNORECASE)
 
             for file in file_list:
                 if not file.endswith('.wav'):

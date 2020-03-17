@@ -21,7 +21,7 @@ from utils.utils import load_mfcc_batch
 
 if __name__ == '__main__':
 
-    data_path = 'F:\\Speech_Recognition_Macedonian\\Database\\edit'
+    data_path = 'F:\\Speech_Recognition_Macedonian\\Database\\new'
     rate = 16000
     coeff = 13
 
@@ -31,4 +31,4 @@ if __name__ == '__main__':
 
     # generate_mfcc(path=data_path, sampling_rate=rate, num_coeff=coeff, verbose=True)
 
-    refactor_all(path=data_path, verbose=True)
+    resample_audio(path=data_path, sampling_rate=rate, verbose=True)

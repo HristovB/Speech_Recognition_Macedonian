@@ -46,6 +46,9 @@ def rename_transcripts(path, verbose=False):
 
             file_list = sorted([file for file in os.listdir(path + os.sep + folder + os.sep + batch) if file.endswith('.txt')])
 
+            if not file_list:
+                continue
+
             if len(file_list) > 1:
                 for extra_file in file_list[1:]:
                     os.remove(path + os.sep + folder + os.sep + batch + os.sep + extra_file)
@@ -180,6 +183,9 @@ def refactor_all(path, verbose=False):
                 print('Loading batch', batch, '...')
 
             file_list = sorted([file for file in os.listdir(path + os.sep + folder + os.sep + batch) if file.endswith('.txt')])
+
+            if not file_list:
+                continue
 
             format_transcript(path=path + os.sep + folder + os.sep + batch + os.sep + file_list[0])
 
