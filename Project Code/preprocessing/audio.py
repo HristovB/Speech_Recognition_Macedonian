@@ -1,3 +1,15 @@
+"""
+Functions for audio file preprocessing
+
+Copyright 2020 by Blagoj Hristov
+
+See the LICENSE file for the licensing associated with this software.
+
+Author:
+  Blagoj Hristov, March 2020
+
+"""
+
 import os
 import librosa as lb
 

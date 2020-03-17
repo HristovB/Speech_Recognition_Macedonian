@@ -1,3 +1,15 @@
+"""
+Functions for refactoring of audio files and folders as per agreed upon naming convention
+
+Copyright 2020 by Blagoj Hristov
+
+See the LICENSE file for the licensing associated with this software.
+
+Author:
+  Blagoj Hristov, March 2020
+
+"""
+
 import os
 from utils.utils import increment_file, reset_file, increment_batch, reset_batch
 

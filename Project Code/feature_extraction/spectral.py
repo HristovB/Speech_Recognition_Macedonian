@@ -1,3 +1,15 @@
+"""
+Functions for spectrogram based feature extraction
+
+Copyright 2020 by Blagoj Hristov
+
+See the LICENSE file for the licensing associated with this software.
+
+Author:
+  Blagoj Hristov, March 2020
+
+"""
+
 import os
 import librosa as lb
 import numpy as np
