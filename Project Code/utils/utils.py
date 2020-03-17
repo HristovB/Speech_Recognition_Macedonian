@@ -219,7 +219,7 @@ def is_indexed(transcript):
 
 def load_mfcc(path):
     """"
-    This function is for loading the generated MFCC features into numpy matrices.
+    This function is for batchwise loading of the generated MFCC features into a list of 2D NumPy matrices.
 
     Parameters:
         path (string): String variable containing the path to a batch folder (containing multiple audio files)
