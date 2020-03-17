@@ -1,7 +1,8 @@
 import os
+import numpy as np
 from feature_extraction.spectral import generate_mfcc
 from refactoring.transcript import index_transcripts
-from refactoring.audio_files import rename_files
+from refactoring.files import rename_files
 from preprocessing.audio import resample_audio
 
 

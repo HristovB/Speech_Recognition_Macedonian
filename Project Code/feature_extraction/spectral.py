@@ -14,7 +14,7 @@ import os
 import librosa as lb
 import numpy as np
 from python_speech_features import mfcc
-from utils.utils import find_batch_maximum
+from utils.utils import find_batch_maximum, count_files
 
 
 def generate_mfcc(path, sampling_rate, num_coeff, verbose=False):
@@ -46,11 +46,11 @@ def generate_mfcc(path, sampling_rate, num_coeff, verbose=False):
 
         for batch in batch_list:
             if verbose:
-                print('Loading next batch...')
+                print('Loading batch', batch, '...')
 
             file_list = sorted(os.listdir(path + os.sep + folder + os.sep + batch))
 
-            count = len(file_list) - 1
+            count = count_files(path=path + os.sep + folder + os.sep + batch)
             maximum = find_batch_maximum(path=path + os.sep + folder + os.sep + batch, sampling_rate=sampling_rate, num_coeff=13)
 
             batch_mfcc = np.empty((maximum, 13, count))
@@ -69,7 +69,7 @@ def generate_mfcc(path, sampling_rate, num_coeff, verbose=False):
 
                 num_file = num_file + 1
 
-            np.save(path + os.sep + folder + os.sep + batch + os.sep + folder + '-' + batch + '_mfcc', batch_mfcc)
+            np.save(path + os.sep + folder + os.sep + batch + os.sep + folder + '-' + batch + '-mfcc', batch_mfcc)
 
             if verbose:
                 print('Batch', batch, 'done!')
