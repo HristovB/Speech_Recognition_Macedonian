@@ -21,14 +21,16 @@ from utils.utils import load_mfcc_batch
 
 if __name__ == '__main__':
 
-    data_path = 'F:\\Speech_Recognition_Macedonian\\Database\\new'
+    data_path = 'F:\\Speech_Recognition_Macedonian\\Database\\train'
     rate = 16000
     coeff = 13
 
     # batch_features = load_mfcc_batch(data_path + os.sep + '1' + os.sep + '000000')
 
-    # rename_files(path=data_path, verbose=True)
+    rename_files(path=data_path, verbose=True)
 
     # generate_mfcc(path=data_path, sampling_rate=rate, num_coeff=coeff, verbose=True)
 
-    resample_audio(path=data_path, sampling_rate=rate, verbose=True)
+    # resample_audio(path=data_path, sampling_rate=rate, verbose=True)
+
+    # refactor_all(path=data_path)

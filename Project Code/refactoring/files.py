@@ -67,6 +67,11 @@ def rename_files(path, verbose=False):
                         new_name = new_folder_name + '-' + new_batch_name + '-mfcc' + '.npy'
                         os.rename(path + os.sep + new_folder_name + os.sep + new_batch_name + os.sep + file,
                                   path + os.sep + new_folder_name + os.sep + new_batch_name + os.sep + new_name)
+
+                    if file.endswith('.mp3'):
+                        new_name = new_folder_name + '-' + new_batch_name + '.mp3'
+                        os.rename(path + os.sep + new_folder_name + os.sep + new_batch_name + os.sep + file,
+                                  path + os.sep + new_folder_name + os.sep + new_batch_name + os.sep + new_name)
                     continue
 
                 new_name = new_folder_name + '-' + new_batch_name + '-' + str(file_count) + '.wav'
