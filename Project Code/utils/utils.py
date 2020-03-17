@@ -11,6 +11,7 @@ Author:
 """
 
 import os
+import numpy as np
 import librosa as lb
 import re
 from python_speech_features import mfcc
@@ -214,3 +215,28 @@ def is_indexed(transcript):
         return True
     else:
         return False
+
+
+def load_mfcc(path):
+    """"
+    This function is for loading the generated MFCC features into numpy matrices.
+
+    Parameters:
+        path (string): String variable containing the path to a batch folder (containing multiple audio files)
+
+    Returns:
+        batch_mfcc (list): List variable containing the 2D MFCC features for all audio files in the batch folder
+
+    """
+
+    file = [file for file in os.listdir(path) if file.endswith('.npy')]
+
+    mfcc_data = np.load(path + os.sep + file[0])
+
+    batch_mfcc = []
+    for file_mfcc in np.rollaxis(mfcc_data, 2):
+        file_mfcc = file_mfcc[~np.isnan(file_mfcc).any(axis=1)]
+
+        batch_mfcc.append(file_mfcc)
+
+    return batch_mfcc

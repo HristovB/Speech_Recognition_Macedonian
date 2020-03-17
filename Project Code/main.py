@@ -11,12 +11,13 @@ Author:
 """
 
 import os
+import sys
 import numpy as np
 from feature_extraction.spectral import generate_mfcc
 from refactoring.transcript import index_transcripts
 from refactoring.files import rename_files
 from preprocessing.audio import resample_audio
-
+from utils.utils import load_mfcc
 
 if __name__ == '__main__':
 
@@ -24,8 +25,8 @@ if __name__ == '__main__':
     rate = 16000
     coeff = 13
 
-    # mfcc_dat = np.load(data_path + os.sep + '1' + os.sep + '000001' + os.sep + '1-000001_mfcc.npy')
+    batch_features = load_mfcc(data_path + os.sep + '1' + os.sep + '000000')
 
     # rename_files(path=data_path, verbose=True)
 
-    generate_mfcc(path=data_path, sampling_rate=rate, num_coeff=coeff, verbose=True)
+    # generate_mfcc(path=data_path, sampling_rate=rate, num_coeff=coeff, verbose=True)
