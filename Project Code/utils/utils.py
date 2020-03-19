@@ -14,70 +14,13 @@ import os
 import numpy as np
 import librosa as lb
 import re
+from matplotlib import pyplot as plt
 from python_speech_features import mfcc
 
 
-def find_maximum(path, sampling_rate, num_coeff, verbose=False):
-    """"
-    This function is for finding the maximum possible length of the generated MFCC features (longest audio clip), for determining the size of the data matrix.
-
-    With the initial data, the maximum of the whole dataset is: 9759
-
-    Parameters:
-        path (string): String variable containing the path to the main data folder (containing multiple folders of batches)
-        sampling_rate (int): Integer value to determine the desired sampling rate (ex: 16kHz ==> sampling_rate = 16000)
-        num_coeff (int): Number of mel-frequency cepstral coefficients to be generated (number of features)
-        verbose (bool): Boolean variable to determine whether to print the progress of the function
-
-    Returns:
-        max_length (int): The maximum possible length of the audio files
-
+def find_maximum_batch(path, sampling_rate, num_coeff, verbose=False):
     """
-
-    folder_list = os.listdir(path)
-    max_length = 0
-
-    if verbose:
-        print('Finding maximum...')
-        print()
-
-    for folder in folder_list:
-        if verbose:
-            print('Loading folder', folder, '...')
-
-        batch_list = sorted(os.listdir(path + os.sep + folder))
-
-        for batch in batch_list:
-            if verbose:
-                print('Loading batch', batch, '...')
-
-            file_list = sorted(os.listdir(path + os.sep + folder + os.sep + batch))
-
-            for file in file_list:
-                if not file.endswith('.wav'):
-                    continue
-
-                audio, _ = lb.load(path + os.sep + folder + os.sep + batch + os.sep + file, sr=sampling_rate)
-
-                max_length = max(max_length, len(mfcc(signal=audio, samplerate=sampling_rate, numcep=num_coeff)))
-
-            if verbose:
-                print('Batch done!')
-
-        if verbose:
-            print('Folder done!')
-            print()
-
-    if verbose:
-        print('Maximum:', max_length)
-        print()
-
-    return max_length
-
-
-def find_batch_maximum(path, sampling_rate, num_coeff, verbose=False):
-    """"
-    This function is for finding the maximum possible length of the generated MFCC features (longest audio clip), for determining the size of the data matrix.
+    This function is for finding the length of the longest audio clip (through the MFCC features) in a batch folder, for determining the size of the data array.
 
     Parameters:
         path (string): String variable containing the path to a batch folder (containing multiple audio files)
@@ -86,7 +29,7 @@ def find_batch_maximum(path, sampling_rate, num_coeff, verbose=False):
         verbose (bool): Boolean variable to determine whether to print the progress of the function
 
     Returns:
-        max_length (int): The maximum possible length of the audio files
+        max_length (int): The length of the longest audio file in the batch
 
     """
 
@@ -105,13 +48,134 @@ def find_batch_maximum(path, sampling_rate, num_coeff, verbose=False):
         max_length = max(max_length, len(mfcc(signal=audio, samplerate=sampling_rate, numcep=num_coeff)))
 
     if verbose:
-        print('Maximum:', max_length)
+        print('Batch maximum:', max_length)
 
     return max_length
 
 
-def count_files(path, verbose=False):
-    """"
+def find_maximum_folder(path, sampling_rate, num_coeff, verbose=False):
+    """
+    This function is for finding the length of the longest audio clip (through the MFCC features) in a main folder, for determining the size of the data array.
+
+    Parameters:
+        path (string): String variable containing the path to a main folder (containing multiple batch folders)
+        sampling_rate (int): Integer value to determine the desired sampling rate (ex: 16kHz ==> sampling_rate = 16000)
+        num_coeff (int): Number of mel-frequency cepstral coefficients to be generated (number of features)
+        verbose (bool): Boolean variable to determine whether to print the progress of the function
+
+    Returns:
+        max_length (int): The length of the longest audio file in the folder
+
+    """
+
+    batch_list = sorted(os.listdir(path))
+    max_length = 0
+
+    if verbose:
+        print('Finding maximum...')
+        print()
+
+    for batch in batch_list:
+        if verbose:
+            print('Loading batch', batch, '...')
+
+        max_length = max(max_length, find_maximum_batch(path + os.sep + batch, sampling_rate=sampling_rate, num_coeff=num_coeff))
+
+        if verbose:
+            print('Batch', batch, 'done!')
+            print()
+
+    if verbose:
+        print('Folder maximum:', max_length)
+        print()
+
+    return max_length
+
+
+def find_maximum_all(path, sampling_rate, num_coeff, verbose=False):
+    """
+    This function is for finding the length of the longest audio clip (through the MFCC features) the entire dataset, for determining the size of the data array.
+
+    Parameters:
+        path (string): String variable containing the path to a main folder (containing multiple batch folders)
+        sampling_rate (int): Integer value to determine the desired sampling rate (ex: 16kHz ==> sampling_rate = 16000)
+        num_coeff (int): Number of mel-frequency cepstral coefficients to be generated (number of features)
+        verbose (bool): Boolean variable to determine whether to print the progress of the function
+
+    Returns:
+        max_length (int): The length of the longest audio file in the entire dataset
+
+    """
+
+    folder_list = os.listdir(path)
+    max_length = 0
+
+    if verbose:
+        print('Finding maximum...')
+        print()
+
+    for folder in folder_list:
+        if verbose:
+            print('Loading folder', folder, '...')
+
+        max_length = max(max_length, find_maximum_folder(path + os.sep + folder, sampling_rate=sampling_rate, num_coeff=num_coeff))
+
+        if verbose:
+            print('Folder', folder, 'done!')
+            print()
+
+    if verbose:
+        print('Maximum:', max_length)
+        print()
+
+    return max_length
+
+
+def count_files_folder(path, verbose=False):
+    """
+    This function is for counting the total number of audio files in a folder.
+
+    Parameters:
+        path (string): String variable containing the path to a main folder (containing multiple batch folders)
+        verbose (bool): Boolean variable to determine whether to print the progress of the function
+
+    Returns:
+        count (int): The total number of audio files in the dataset
+
+    """
+
+    batch_list = sorted(os.listdir(path))
+    count = 0
+
+    if verbose:
+        print('Counting...')
+        print()
+
+    for batch in batch_list:
+        if verbose:
+            print('Loading batch', batch, '...')
+
+        file_list = sorted(os.listdir(path + os.sep + batch))
+
+        for file in file_list:
+            if not file.endswith('.wav'):
+                continue
+
+            count = count + 1
+
+        if verbose:
+            print('Batch', batch, 'done!')
+            print()
+
+    if verbose:
+        print('Total count:', count)
+        print()
+
+    return count
+
+
+def count_files_batch(path, verbose=False):
+    """
     This function is for counting the total number of audio files in a batch.
 
     Parameters:
@@ -119,7 +183,7 @@ def count_files(path, verbose=False):
         verbose (bool): Boolean variable to determine whether to print the progress of the function
 
     Returns:
-        count (int): The total number of audio files in the dataset
+        count (int): The total number of audio files in the batch
 
     """
 
@@ -144,7 +208,7 @@ def count_files(path, verbose=False):
 
 
 def increment_batch(number):
-    """"
+    """
     This function is for proper incrementing of the batch folder names, as per agreed upon convention.
 
     Parameters:
@@ -160,7 +224,7 @@ def increment_batch(number):
 
 
 def reset_batch():
-    """"
+    """
     This function is for resetting the counter for the batch folder names, as per agreed upon convention.
 
     Returns:
@@ -172,7 +236,7 @@ def reset_batch():
 
 
 def increment_file(number):
-    """"
+    """
     This function is for proper incrementing of the file names, as per agreed upon convention.
 
     Parameters:
@@ -188,7 +252,7 @@ def increment_file(number):
 
 
 def reset_file():
-    """"
+    """
     This function is for resetting the counter for the file names, as per agreed upon convention.
 
     Returns:
@@ -200,7 +264,7 @@ def reset_file():
 
 
 def is_indexed(transcript):
-    """"
+    """
     This function is for checking if the transcript files already contain indexing (old dataset), as per agreed upon convention.
 
     Parameters:
@@ -218,7 +282,7 @@ def is_indexed(transcript):
 
 
 def load_mfcc_batch(path):
-    """"
+    """
     This function is for batchwise loading of the generated MFCC features into a list of 2D NumPy matrices.
 
     Parameters:
@@ -233,12 +297,27 @@ def load_mfcc_batch(path):
 
     mfcc_data = np.load(path + os.sep + file[0])
 
-    batch_mfcc = []
-    for file_mfcc in np.rollaxis(mfcc_data, 2):
-        file_mfcc = file_mfcc[~np.isnan(file_mfcc).any(axis=1)]
-
-        batch_mfcc.append(file_mfcc)
-
-    return batch_mfcc
+    return mfcc_data
 
 
+def plot_mfcc_batch(mfcc_data):
+    """
+    This function is for plotting the generated MFCC features of a single audio file.
+
+    Parameters:
+        mfcc_data (string): 2D numpy array containing the generated MFCC features (axis 0 ==> data through time; axis 1 ==> coefficients)
+
+    Returns:
+        Plots the MFCC matrix in a new window
+
+    """
+
+    mfcc_data = mfcc_data[~np.all(mfcc_data == 0, axis=1)]
+    mfcc_data = np.swapaxes(mfcc_data, 0, 1)
+
+    plt.figure(figsize=(18, 4))
+    plt.imshow(mfcc_data, interpolation='nearest', aspect='auto')
+    plt.title('Mel-frequency cepstral coefficients')
+    plt.xlabel('Time (ms)')
+    plt.ylabel('Coefficients')
+    plt.show()

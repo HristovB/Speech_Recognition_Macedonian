@@ -13,19 +13,20 @@ Author:
 import os
 import sys
 import numpy as np
+from matplotlib import pyplot as plt
+import seaborn as sns
 from feature_extraction.spectral import generate_mfcc
 from refactoring.transcript import refactor_all, index_transcript, format_transcript
 from refactoring.files import rename_files
 from preprocessing.audio import resample_audio
-from utils.utils import load_mfcc_batch
+from utils.utils import load_mfcc_batch, plot_mfcc_batch
+
 
 if __name__ == '__main__':
 
-    data_path = 'F:\\Speech_Recognition_Macedonian\\Database\\edit'
+    data_path = 'F:\\Speech_Recognition_Macedonian\\Database\\train'
     rate = 16000
     coeff = 13
-
-    # batch_features = load_mfcc_batch(data_path + os.sep + '1' + os.sep + '000000')
 
     # rename_files(path=data_path, verbose=True)
 
@@ -33,4 +34,11 @@ if __name__ == '__main__':
 
     # resample_audio(path=data_path, sampling_rate=rate, verbose=True)
 
-    refactor_all(path=data_path)
+    # refactor_all(path=data_path)
+
+    batch_features = load_mfcc_batch(path=data_path + os.sep + '1' + os.sep + '000000')
+
+    mfcc_data = batch_features[:, :, 0]
+    plot_mfcc_batch(mfcc_data=mfcc_data)
+
+
