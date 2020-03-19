@@ -28,7 +28,7 @@ def generate_mfcc(path, sampling_rate, num_coeff, verbose=False):
         verbose (bool): Boolean variable to determine whether to print the progress of the function
 
     Returns:
-        None, but saves the numpy arrays containing the generated MFCCs as .npy files in the corresponding batch folder
+        Creates a .npy file of the numpy arrays containing the generated MFCCs in the corresponding batch folder. Axis 0 contains the 13 coefficients, Axis 1 contains the data through time
 
     """
 
