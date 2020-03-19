@@ -37,11 +37,11 @@ def padding(data, maximum):
     This function is for zero-padding the feature array, to allow for shape uniformity during training.
 
     Parameters:
-        data (np.array): NumPy array containing the spectrogram or MFCC features of a single audio file
+        data (np.ndarray): NumPy array containing the spectrogram or MFCC features of a single audio file
         maximum (int): The maximum size (longest audio file) of the spectrogram or MFCC features, which determines the size of the padding.
 
     Returns:
-        data (np.array): NumPy array containing the padded data
+        data (np.ndarray): NumPy array containing the padded data
 
     """
 
