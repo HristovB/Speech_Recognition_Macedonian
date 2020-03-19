@@ -63,8 +63,13 @@ def rename_files(path, verbose=False):
 
             for file in file_list:
                 if not file.endswith('.wav'):
-                    if file.endswith('.npy'):
-                        new_name = new_folder_name + '-' + new_batch_name + '-mfcc' + '.npy'
+                    if file.endswith('mfcc.h5'):
+                        new_name = new_folder_name + '-' + new_batch_name + '-mfcc' + '.h5'
+                        os.rename(path + os.sep + new_folder_name + os.sep + new_batch_name + os.sep + file,
+                                  path + os.sep + new_folder_name + os.sep + new_batch_name + os.sep + new_name)
+
+                    if file.endswith('spectrogram.h5'):
+                        new_name = new_folder_name + '-' + new_batch_name + '-spectrogram' + '.h5'
                         os.rename(path + os.sep + new_folder_name + os.sep + new_batch_name + os.sep + file,
                                   path + os.sep + new_folder_name + os.sep + new_batch_name + os.sep + new_name)
 
