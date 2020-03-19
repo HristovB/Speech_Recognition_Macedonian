@@ -16,7 +16,7 @@ from utils.utils import increment_file, reset_file, increment_batch, reset_batch
 
 
 def rename_files(path, verbose=False):
-    """"
+    """
     This function is for renaming the files, as per an agreed upon convention, to allow for easier reading.
 
     Parameters:

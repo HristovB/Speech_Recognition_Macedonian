@@ -15,7 +15,7 @@ import librosa as lb
 
 
 def resample_audio(path, sampling_rate, verbose=False):
-    """"
+    """
     This function is for resampling audio files to a set sampling rate.
 
     Parameters:

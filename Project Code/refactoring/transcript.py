@@ -16,7 +16,7 @@ from utils.utils import increment_file, reset_file, is_indexed
 
 
 def rename_transcripts(path, verbose=False):
-    """"
+    """
     This function is for renaming the transcript text files, as per an agreed upon convention, to allow for easier reading.
 
     Parameters:
@@ -73,7 +73,7 @@ def rename_transcripts(path, verbose=False):
 
 
 def index_transcript(path, folder, batch):
-    """"
+    """
     This function is for proper indexing a single transcript file, as per an agreed upon convention, to allow for easier reading.
 
     Parameters:
@@ -122,7 +122,7 @@ def index_transcript(path, folder, batch):
 
 
 def format_transcript(path):
-    """"
+    """
     This function is for converting the transcript text to all uppercase letters and removing all special characters (except for whitespace and newline characters), as per agreed upon convention.
 
     Parameters:
@@ -154,7 +154,7 @@ def format_transcript(path):
 
 
 def refactor_all(path, verbose=False):
-    """"
+    """
     This function is for proper formatting and indexing of all of the transcript text files located in the main data folder, as per an agreed upon convention, to allow for easier reading.
 
     Parameters:
@@ -194,11 +194,11 @@ def refactor_all(path, verbose=False):
             index_transcript(path=path + os.sep + folder + os.sep + batch + os.sep + file_list[0], folder=folder, batch=batch)
 
             if verbose:
-                print('Batch done!')
+                print('Batch', batch, 'done!')
                 print()
 
         if verbose:
-            print('Folder done!')
+            print('Folder', folder, 'done!')
             print()
 
     rename_transcripts(path)
