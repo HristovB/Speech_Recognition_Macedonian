@@ -304,7 +304,7 @@ def load_mfcc_batch(path):
         path (string): String variable containing the path to a batch folder (containing multiple audio files)
 
     Returns:
-        batch_mfcc_data (np.array): 3D NumPy array containing the 2D spectrogram features for all audio files in the batch folder
+        batch_mfcc_data (np.ndarray): 3D NumPy array containing the 2D spectrogram features for all audio files in the batch folder
         Axis 0 represents the data through time
         Axis 1 represents the mel-frequency cepstral coefficients
         Axis 2 represents the multiple individual audio files
@@ -331,7 +331,7 @@ def load_spectrogram_batch(path):
         path (string): String variable containing the path to a batch folder (containing multiple audio files)
 
     Returns:
-        batch_spectrogram_data (np.array): 3D NumPy array containing the 2D spectrogram features for all audio files in the batch folder
+        batch_spectrogram_data (np.ndarray): 3D NumPy array containing the 2D spectrogram features for all audio files in the batch folder
         Axis 0 represents the data through time
         Axis 1 represents the frequency
         Axis 2 represents the multiple individual audio files
@@ -355,7 +355,7 @@ def plot_mfcc(mfcc_data):
     This function is for plotting the generated MFCC features of a single audio file.
 
     Parameters:
-        mfcc_data (np.array): 2D NumPy array containing the generated MFCC features (axis 0 ==> data through time; axis 1 ==> mel-frequency cepstral coefficients)
+        mfcc_data (np.ndarray): 2D NumPy array containing the generated MFCC features (axis 0 ==> data through time; axis 1 ==> mel-frequency cepstral coefficients)
 
     Returns:
         Plots the MFCC 2D array in a new window
@@ -378,7 +378,7 @@ def plot_spectrogram(spectrogram_data):
     This function is for plotting the generated spectrogram of a single audio file.
 
     Parameters:
-        spectrogram_data (np.array): 2D NumPy array containing the generated spectrogram (axis 0 ==> data through time; axis 1 ==> frequency)
+        spectrogram_data (np.ndarray): 2D NumPy array containing the generated spectrogram (axis 0 ==> data through time; axis 1 ==> frequency)
 
     Returns:
         Plots the spectrogram 2D array in a new window
@@ -392,4 +392,37 @@ def plot_spectrogram(spectrogram_data):
     plt.pcolormesh(spectrogram_data)
     plt.xlabel('Time [s]')
     plt.ylabel('Frequency [Hz]')
+    plt.show()
+
+
+def plot_all(audio_signal, spectrogram_data, mfcc_data):
+    """
+    This function is for plotting the audio signal, generated spectrogram and generated MFCC features on the same figure, for comparison.
+
+    Parameters:
+        audio_signal (np.ndarray): 2D NumPy array containing the raw audio signal
+        spectrogram_data (np.ndarray): 2D NumPy array containing the generated spectrogram (axis 0 ==> data through time; axis 1 ==> frequency)
+        mfcc_data (np.ndarray): 2D NumPy array containing the generated MFCC features (axis 0 ==> data through time; axis 1 ==> mel-frequency cepstral coefficients)
+
+    Returns:
+        Plots the audio signal, spectrogram and MFCC features as subplots on the same figure in a new window
+
+    """
+
+    fig, ax = plt.subplots(nrows=3, ncols=1)
+    fig.tight_layout()
+
+    ax[0].plot(audio_signal)
+    ax[0].set_title('Audio Signal')
+
+    ax[1].pcolormesh(spectrogram_data)
+    ax[1].set_title('Spectrogram')
+    ax[1].set_xlabel('Time [s]')
+    ax[1].set_ylabel('Frequency [Hz]')
+
+    ax[2].pcolormesh(mfcc_data)
+    ax[2].set_title('Mel-frequency cepstral coefficients')
+    ax[2].set_xlabel('Time [ms]')
+    ax[2].set_ylabel('Coefficients')
+
     plt.show()
