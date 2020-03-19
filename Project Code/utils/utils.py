@@ -14,18 +14,21 @@ import os
 import numpy as np
 import librosa as lb
 import re
+import h5py
+from scipy import signal
 from matplotlib import pyplot as plt
 from python_speech_features import mfcc
 
 
-def find_maximum_batch(path, sampling_rate, num_coeff, verbose=False):
+def find_maximum_batch(path, sampling_rate, method='spectrogram', num_coeff=None, verbose=False):
     """
-    This function is for finding the length of the longest audio clip (through the MFCC features) in a batch folder, for determining the size of the data array.
+    This function is for finding the length of the longest audio clip (through the spectrogram or MFCC features) in a batch folder, for determining the size of the data array.
 
     Parameters:
         path (string): String variable containing the path to a batch folder (containing multiple audio files)
         sampling_rate (int): Integer value to determine the desired sampling rate (ex: 16kHz ==> sampling_rate = 16000)
-        num_coeff (int): Number of mel-frequency cepstral coefficients to be generated (number of features)
+        method (string): {'spectrogram', 'mfcc'} String variable to determine whether to search maximum for spectrogram or MFCC features
+        num_coeff (int): Number of mel-frequency cepstral coefficients to be generated (number of features) - only when using 'mfcc' method!
         verbose (bool): Boolean variable to determine whether to print the progress of the function
 
     Returns:
@@ -45,7 +48,17 @@ def find_maximum_batch(path, sampling_rate, num_coeff, verbose=False):
 
         audio, _ = lb.load(path + os.sep + file, sr=sampling_rate)
 
-        max_length = max(max_length, len(mfcc(signal=audio, samplerate=sampling_rate, numcep=num_coeff)))
+        if method == 'mfcc':
+            max_length = max(max_length, len(mfcc(signal=audio, samplerate=sampling_rate, numcep=num_coeff)))
+
+        elif method == 'spectrogram':
+            _, _, spectrogram_data = signal.spectrogram(x=audio, fs=sampling_rate)
+            spectrogram_data = np.swapaxes(10 * np.log10(spectrogram_data), 0, 1)
+
+            max_length = max(max_length, len(spectrogram_data))
+
+        else:
+            raise ValueError('Wrong input for method argument! Possible inputs: \'spectrogram\', \'mfcc\'')
 
     if verbose:
         print('Batch maximum:', max_length)
@@ -53,14 +66,15 @@ def find_maximum_batch(path, sampling_rate, num_coeff, verbose=False):
     return max_length
 
 
-def find_maximum_folder(path, sampling_rate, num_coeff, verbose=False):
+def find_maximum_folder(path, sampling_rate, method='spectrogram', num_coeff=None, verbose=False):
     """
-    This function is for finding the length of the longest audio clip (through the MFCC features) in a main folder, for determining the size of the data array.
+    This function is for finding the length of the longest audio clip (through the spectrogram or MFCC features) in a main folder, for determining the size of the data array.
 
     Parameters:
         path (string): String variable containing the path to a main folder (containing multiple batch folders)
         sampling_rate (int): Integer value to determine the desired sampling rate (ex: 16kHz ==> sampling_rate = 16000)
-        num_coeff (int): Number of mel-frequency cepstral coefficients to be generated (number of features)
+        method (string): {'spectrogram', 'mfcc'} String variable to determine whether to search maximum for spectrogram or MFCC features
+        num_coeff (int): Number of mel-frequency cepstral coefficients to be generated (number of features) - only when using 'mfcc' method!
         verbose (bool): Boolean variable to determine whether to print the progress of the function
 
     Returns:
@@ -79,7 +93,7 @@ def find_maximum_folder(path, sampling_rate, num_coeff, verbose=False):
         if verbose:
             print('Loading batch', batch, '...')
 
-        max_length = max(max_length, find_maximum_batch(path + os.sep + batch, sampling_rate=sampling_rate, num_coeff=num_coeff))
+        max_length = max(max_length, find_maximum_batch(path=path + os.sep + batch, sampling_rate=sampling_rate, method=method, num_coeff=num_coeff))
 
         if verbose:
             print('Batch', batch, 'done!')
@@ -92,14 +106,15 @@ def find_maximum_folder(path, sampling_rate, num_coeff, verbose=False):
     return max_length
 
 
-def find_maximum_all(path, sampling_rate, num_coeff, verbose=False):
+def find_maximum_all(path, sampling_rate, method='spectrogram', num_coeff=None, verbose=False):
     """
-    This function is for finding the length of the longest audio clip (through the MFCC features) the entire dataset, for determining the size of the data array.
+    This function is for finding the length of the longest audio clip (through the spectrogram or MFCC features) the entire dataset, for determining the size of the data array.
 
     Parameters:
         path (string): String variable containing the path to a main folder (containing multiple batch folders)
         sampling_rate (int): Integer value to determine the desired sampling rate (ex: 16kHz ==> sampling_rate = 16000)
-        num_coeff (int): Number of mel-frequency cepstral coefficients to be generated (number of features)
+        method (string): {'spectrogram', 'mfcc'} String variable to determine whether to search maximum for spectrogram or MFCC features
+        num_coeff (int): Number of mel-frequency cepstral coefficients to be generated (number of features) - only when using 'mfcc' method!
         verbose (bool): Boolean variable to determine whether to print the progress of the function
 
     Returns:
@@ -118,7 +133,7 @@ def find_maximum_all(path, sampling_rate, num_coeff, verbose=False):
         if verbose:
             print('Loading folder', folder, '...')
 
-        max_length = max(max_length, find_maximum_folder(path + os.sep + folder, sampling_rate=sampling_rate, num_coeff=num_coeff))
+        max_length = max(max_length, find_maximum_folder(path=path + os.sep + folder, sampling_rate=sampling_rate, method=method, num_coeff=num_coeff))
 
         if verbose:
             print('Folder', folder, 'done!')
@@ -228,7 +243,7 @@ def reset_batch():
     This function is for resetting the counter for the batch folder names, as per agreed upon convention.
 
     Returns:
-        number: The reset counter, equal to zero, in proper format as per agreed upon convention.
+        number: The reset counter, equal to zero, in proper format as per agreed upon convention
 
     """
 
@@ -256,7 +271,7 @@ def reset_file():
     This function is for resetting the counter for the file names, as per agreed upon convention.
 
     Returns:
-        number: The reset counter, equal to zero, in proper format as per agreed upon convention.
+        number: The reset counter, equal to zero, in proper format as per agreed upon convention
 
     """
 
@@ -283,32 +298,67 @@ def is_indexed(transcript):
 
 def load_mfcc_batch(path):
     """
-    This function is for batchwise loading of the generated MFCC features into a list of 2D NumPy matrices.
+    This function is for batchwise loading of the generated MFCC features into a 3D NumPy array.
 
     Parameters:
         path (string): String variable containing the path to a batch folder (containing multiple audio files)
 
     Returns:
-        batch_mfcc (list): List variable containing the 2D MFCC features for all audio files in the batch folder
-
+        batch_mfcc_data (np.array): 3D NumPy array containing the 2D spectrogram features for all audio files in the batch folder
+        Axis 0 represents the data through time
+        Axis 1 represents the mel-frequency cepstral coefficients
+        Axis 2 represents the multiple individual audio files
     """
 
-    file = [file for file in os.listdir(path) if file.endswith('.npy')]
+    data_files = [file for file in os.listdir(path) if file.endswith('.h5')]
+    mfcc_file = None
 
-    mfcc_data = np.load(path + os.sep + file[0])
+    for file in data_files:
+        if bool(re.match(r'﻿?[0-9]-[0-9]{6}-mfcc\.h5', file)):
+            mfcc_file = file
 
-    return mfcc_data
+    hdf5_file = h5py.File(name=path + os.sep + mfcc_file, mode='r')
+    batch_mfcc_data = hdf5_file['MFCC'][:]
+
+    return batch_mfcc_data
 
 
-def plot_mfcc_batch(mfcc_data):
+def load_spectrogram_batch(path):
+    """
+    This function is for batchwise loading of the generated spectrogram features into a 3D NumPy array.
+
+    Parameters:
+        path (string): String variable containing the path to a batch folder (containing multiple audio files)
+
+    Returns:
+        batch_spectrogram_data (np.array): 3D NumPy array containing the 2D spectrogram features for all audio files in the batch folder
+        Axis 0 represents the data through time
+        Axis 1 represents the frequency
+        Axis 2 represents the multiple individual audio files
+    """
+
+    data_files = [file for file in os.listdir(path) if file.endswith('.h5')]
+    spectrogram_file = None
+
+    for file in data_files:
+        if bool(re.match(r'﻿?[0-9]-[0-9]{6}-spectrogram\.h5', file)):
+            spectrogram_file = file
+
+    hdf5_file = h5py.File(name=path + os.sep + spectrogram_file, mode='r')
+    batch_spectrogram_data = hdf5_file['Spectrogram'][:]
+
+    return batch_spectrogram_data
+
+
+def plot_mfcc(mfcc_data):
     """
     This function is for plotting the generated MFCC features of a single audio file.
 
     Parameters:
-        mfcc_data (string): 2D numpy array containing the generated MFCC features (axis 0 ==> data through time; axis 1 ==> coefficients)
+        mfcc_data (np.array): 2D NumPy array containing the generated MFCC features (axis 0 ==> data through time; axis 1 ==> mel-frequency cepstral coefficients)
 
     Returns:
-        Plots the MFCC matrix in a new window
+        Plots the MFCC 2D array in a new window
 
     """
 
@@ -316,8 +366,30 @@ def plot_mfcc_batch(mfcc_data):
     mfcc_data = np.swapaxes(mfcc_data, 0, 1)
 
     plt.figure(figsize=(18, 4))
-    plt.imshow(mfcc_data, interpolation='nearest', aspect='auto')
+    plt.pcolormesh(mfcc_data)
     plt.title('Mel-frequency cepstral coefficients')
-    plt.xlabel('Time (ms)')
+    plt.xlabel('Time [ms]')
     plt.ylabel('Coefficients')
+    plt.show()
+
+
+def plot_spectrogram(spectrogram_data):
+    """
+    This function is for plotting the generated spectrogram of a single audio file.
+
+    Parameters:
+        spectrogram_data (np.array): 2D NumPy array containing the generated spectrogram (axis 0 ==> data through time; axis 1 ==> frequency)
+
+    Returns:
+        Plots the spectrogram 2D array in a new window
+
+    """
+
+    spectrogram_data = spectrogram_data[~np.all(spectrogram_data == 0, axis=1)]
+    spectrogram_data = np.swapaxes(spectrogram_data, 0, 1)
+
+    plt.figure(figsize=(18, 4))
+    plt.pcolormesh(spectrogram_data)
+    plt.xlabel('Time [s]')
+    plt.ylabel('Frequency [Hz]')
     plt.show()
