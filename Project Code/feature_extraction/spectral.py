@@ -53,7 +53,7 @@ def generate_mfcc(path, sampling_rate, num_coeff, verbose=False):
             count = count_files(path=path + os.sep + folder + os.sep + batch)
             maximum = find_batch_maximum(path=path + os.sep + folder + os.sep + batch, sampling_rate=sampling_rate, num_coeff=13)
 
-            batch_mfcc = np.empty((maximum, 13, count))
+            batch_mfcc = np.empty((count, 13, maximum))
             num_file = 0
 
             for file in file_list:
@@ -62,10 +62,15 @@ def generate_mfcc(path, sampling_rate, num_coeff, verbose=False):
 
                 audio, _ = lb.load(path + os.sep + folder + os.sep + batch + os.sep + file, sr=sampling_rate)
 
-                mfcc_data = mfcc(signal=audio, samplerate=sampling_rate, numcep=num_coeff)
-                mfcc_data = np.pad(mfcc_data, ((0, maximum - len(mfcc_data)), (0, 0)), 'constant', constant_values=np.nan)
+                mfcc_data = np.swapaxes(mfcc(signal=audio, samplerate=sampling_rate, numcep=num_coeff), 0, 1)
 
-                batch_mfcc[:, :, num_file] = mfcc_data
+                mean = np.mean(mfcc_data)
+                std = np.std(mfcc_data)
+                mfcc_data = (mfcc_data - mean)/std
+
+                mfcc_data = np.pad(mfcc_data, ((0, 0), (0, maximum - len(mfcc_data[1]))), 'constant', constant_values=np.nan)
+
+                batch_mfcc[num_file, :, :] = mfcc_data
 
                 num_file = num_file + 1
 
