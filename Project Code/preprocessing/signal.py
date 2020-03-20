@@ -1,5 +1,5 @@
 """
-Functions for audio file preprocessing
+Functions for preprocessing of the audio signals
 
 Copyright 2020 by Blagoj Hristov
 
