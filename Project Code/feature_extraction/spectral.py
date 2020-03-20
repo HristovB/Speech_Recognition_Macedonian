@@ -16,7 +16,7 @@ import numpy as np
 import h5py
 from scipy import signal
 from python_speech_features import mfcc
-from utils.utils import find_maximum_all, count_files_batch
+from utils.data import find_maximum_all, count_files_batch
 from preprocessing.spectral import normalize, padding
 
 
