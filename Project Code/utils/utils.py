@@ -454,7 +454,6 @@ def plot_all(audio_signal, spectrogram_data, mfcc_data, sampling_rate):
     fig, ax = plt.subplots(nrows=3, ncols=1)
     fig.tight_layout()
 
-    print(len(audio_signal))
     ax[0].plot(audio_signal)
     ax[0].set_title('Audio Signal')
     ax[0].set_xlabel('Sample number')
