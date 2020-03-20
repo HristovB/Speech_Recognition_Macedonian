@@ -27,9 +27,8 @@ def normalize(data):
 
     mean = np.mean(data)
     std = np.std(data)
-    data = (data - mean) / std
 
-    return data
+    return (data - mean) / std
 
 
 def padding(data, maximum):
@@ -45,6 +44,4 @@ def padding(data, maximum):
 
     """
 
-    data = np.pad(data, ((0, maximum - len(data)), (0, 0)), 'constant', constant_values=0.)
-
-    return data
+    return np.pad(data, ((0, maximum - len(data)), (0, 0)), 'constant', constant_values=0.)
