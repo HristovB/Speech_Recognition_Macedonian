@@ -233,6 +233,7 @@ def load_mfcc_batch(path):
         Axis 0 represents the data through time
         Axis 1 represents the mel-frequency cepstral coefficients
         Axis 2 represents the multiple individual audio files
+
     """
 
     data_files = [file for file in os.listdir(path) if file.endswith('.h5')]
@@ -260,6 +261,7 @@ def load_spectrogram_batch(path):
         Axis 0 represents the data through time
         Axis 1 represents the frequency
         Axis 2 represents the multiple individual audio files
+
     """
 
     data_files = [file for file in os.listdir(path) if file.endswith('.h5')]
@@ -273,3 +275,24 @@ def load_spectrogram_batch(path):
     batch_spectrogram_data = hdf5_file['Spectrogram'][:]
 
     return batch_spectrogram_data
+
+
+def load_transcript(path):
+    """
+    This function is for batchwise loading of the transcripts of the audio files in the batch folder.
+
+    Parameters:
+        path (string): String variable containing the path to a batch folder (containing multiple audio files)
+
+    Returns:
+        batch_transcripts (list): List variable containing the transcripts (string) of the audio files in the batch folder
+
+    """
+
+    file_name= [file for file in os.listdir(path) if file.endswith('.txt')][0]
+
+    transcript_file = open(path + os.sep + file_name, mode='r', encoding='utf-8')
+    batch_transcripts = [line.split(' ', 1)[1] for line in transcript_file.read().split('\n')]
+    transcript_file.close()
+
+    return batch_transcripts

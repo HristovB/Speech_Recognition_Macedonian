@@ -2,16 +2,23 @@
   <dictionary name="Blagoj">
     <words>
       <w>batchwise</w>
+      <w>bilstm</w>
       <w>blagoj</w>
       <w>cepstral</w>
       <w>coeff</w>
+      <w>connectionist</w>
       <w>dataset</w>
       <w>hristov</w>
+      <w>keras</w>
+      <w>logit</w>
+      <w>logits</w>
+      <w>lstm</w>
       <w>mfcc</w>
       <w>ndarray</w>
       <w>preprocessing</w>
       <w>resample</w>
       <w>resampling</w>
+      <w>softmax</w>
     </words>
   </dictionary>
 </component>
