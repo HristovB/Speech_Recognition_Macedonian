@@ -40,19 +40,13 @@ if __name__ == '__main__':
 
     # generate_spectrogram(path=data_path, sampling_rate=rate, verbose=True)
 
-    audio, _ = lb.load(data_path + os.sep + '8' + os.sep + '000002' + os.sep + '8-000002-0032.wav', sr=rate)
+    audio, _ = lb.load(data_path + os.sep + '8' + os.sep + '000000' + os.sep + '8-000000-0000.wav', sr=rate)
 
-    batch_mfcc = load_mfcc_batch(path=data_path + os.sep + '8' + os.sep + '000002')
+    batch_mfcc = load_mfcc_batch(path=data_path + os.sep + '8' + os.sep + '000000')
 
-    batch_spec = load_spectrogram_batch(path=data_path + os.sep + '8' + os.sep + '000002')
+    batch_spec = load_spectrogram_batch(path=data_path + os.sep + '8' + os.sep + '000000')
 
-    mfcc_data = batch_mfcc[:, :, 32]
-    spectrogram_data = batch_spec[:, :, 32]
+    mfcc_data = batch_mfcc[:, :, 0]
+    spectrogram_data = batch_spec[:, :, 0]
 
-    mfcc_data = mfcc_data[~np.all(mfcc_data == 0, axis=1)]
-    mfcc_data = np.swapaxes(mfcc_data, 0, 1)
-
-    spectrogram_data = spectrogram_data[~np.all(spectrogram_data == 0, axis=1)]
-    spectrogram_data = np.swapaxes(spectrogram_data, 0, 1)
-
-    plot_all(audio_signal=audio, spectrogram_data=spectrogram_data, mfcc_data=mfcc_data)
+    plot_all(audio_signal=audio, spectrogram_data=spectrogram_data, mfcc_data=mfcc_data, sampling_rate=rate)

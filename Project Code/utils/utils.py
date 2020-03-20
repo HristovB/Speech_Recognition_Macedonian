@@ -26,7 +26,7 @@ def find_maximum_batch(path, sampling_rate, method='spectrogram', num_coeff=None
 
     Parameters:
         path (string): String variable containing the path to a batch folder (containing multiple audio files)
-        sampling_rate (int): Integer value to determine the desired sampling rate (ex: 16kHz ==> sampling_rate = 16000)
+        sampling_rate (int): Integer variable containing the value of the audio sampling rate (ex: 16kHz ==> sampling_rate = 16000)
         method (string): {'spectrogram', 'mfcc'} String variable to determine whether to search maximum for spectrogram or MFCC features
         num_coeff (int): Number of mel-frequency cepstral coefficients to be generated (number of features) - only when using 'mfcc' method!
         verbose (bool): Boolean variable to determine whether to print the progress of the function
@@ -72,7 +72,7 @@ def find_maximum_folder(path, sampling_rate, method='spectrogram', num_coeff=Non
 
     Parameters:
         path (string): String variable containing the path to a main folder (containing multiple batch folders)
-        sampling_rate (int): Integer value to determine the desired sampling rate (ex: 16kHz ==> sampling_rate = 16000)
+        sampling_rate (int): Integer variable containing the value of the audio sampling rate (ex: 16kHz ==> sampling_rate = 16000)
         method (string): {'spectrogram', 'mfcc'} String variable to determine whether to search maximum for spectrogram or MFCC features
         num_coeff (int): Number of mel-frequency cepstral coefficients to be generated (number of features) - only when using 'mfcc' method!
         verbose (bool): Boolean variable to determine whether to print the progress of the function
@@ -112,7 +112,7 @@ def find_maximum_all(path, sampling_rate, method='spectrogram', num_coeff=None, 
 
     Parameters:
         path (string): String variable containing the path to a main folder (containing multiple batch folders)
-        sampling_rate (int): Integer value to determine the desired sampling rate (ex: 16kHz ==> sampling_rate = 16000)
+        sampling_rate (int): Integer variable containing the value of the audio sampling rate (ex: 16kHz ==> sampling_rate = 16000)
         method (string): {'spectrogram', 'mfcc'} String variable to determine whether to search maximum for spectrogram or MFCC features
         num_coeff (int): Number of mel-frequency cepstral coefficients to be generated (number of features) - only when using 'mfcc' method!
         verbose (bool): Boolean variable to determine whether to print the progress of the function
@@ -373,12 +373,44 @@ def plot_mfcc(mfcc_data):
     plt.show()
 
 
-def plot_spectrogram(spectrogram_data):
+def get_spectrogram_params(audio_signal, spectrogram_data, sampling_rate):
+    """
+    This function is for generating the frequency and time parameters of the spectrogram used during plotting.
+
+    Parameters:
+        audio_signal (np.ndarray): 2D NumPy array containing the raw audio signal
+        spectrogram_data (np.ndarray): 2D NumPy array containing the generated spectrogram (axis 0 ==> data through time; axis 1 ==> frequency)
+        sampling_rate (int): Integer variable containing the value of the audio sampling rate (ex: 16kHz ==> sampling_rate = 16000)
+
+    Returns:
+        freq (np.ndarray): NumPy array containing the sample frequencies
+        time (np.ndarray): NumPy array containing the segment times
+
+    """
+
+    audio_length = len(audio_signal)
+
+    freq_start = 0
+    freq_step = sampling_rate / 2 / 128
+    freq_stop = sampling_rate / 2 + freq_step
+    freq = np.arange(freq_start, freq_stop, freq_step, dtype=np.float64)
+
+    time_start = 1 / sampling_rate * 128
+    time_step = round(int(audio_length / spectrogram_data.shape[1]) / sampling_rate, 3)
+    time_stop = audio_length / sampling_rate
+    time = np.arange(time_start, time_stop, time_step, dtype=np.float64)
+
+    return freq, time
+
+
+def plot_spectrogram(audio_signal, spectrogram_data, sampling_rate):
     """
     This function is for plotting the generated spectrogram of a single audio file.
 
     Parameters:
+        audio_signal (np.ndarray): 2D NumPy array containing the raw audio signal
         spectrogram_data (np.ndarray): 2D NumPy array containing the generated spectrogram (axis 0 ==> data through time; axis 1 ==> frequency)
+        sampling_rate (int): Integer variable containing the value of the audio sampling rate (ex: 16kHz ==> sampling_rate = 16000)
 
     Returns:
         Plots the spectrogram 2D array in a new window
@@ -388,14 +420,17 @@ def plot_spectrogram(spectrogram_data):
     spectrogram_data = spectrogram_data[~np.all(spectrogram_data == 0, axis=1)]
     spectrogram_data = np.swapaxes(spectrogram_data, 0, 1)
 
+    freq, time = get_spectrogram_params(audio_signal=audio_signal, spectrogram_data=spectrogram_data, sampling_rate=sampling_rate)
+
     plt.figure(figsize=(18, 4))
-    plt.pcolormesh(spectrogram_data)
+    plt.pcolormesh(time, freq, spectrogram_data)
+    plt.title('Spectrogram')
     plt.xlabel('Time [s]')
     plt.ylabel('Frequency [Hz]')
     plt.show()
 
 
-def plot_all(audio_signal, spectrogram_data, mfcc_data):
+def plot_all(audio_signal, spectrogram_data, mfcc_data, sampling_rate):
     """
     This function is for plotting the audio signal, generated spectrogram and generated MFCC features on the same figure, for comparison.
 
@@ -403,19 +438,31 @@ def plot_all(audio_signal, spectrogram_data, mfcc_data):
         audio_signal (np.ndarray): 2D NumPy array containing the raw audio signal
         spectrogram_data (np.ndarray): 2D NumPy array containing the generated spectrogram (axis 0 ==> data through time; axis 1 ==> frequency)
         mfcc_data (np.ndarray): 2D NumPy array containing the generated MFCC features (axis 0 ==> data through time; axis 1 ==> mel-frequency cepstral coefficients)
+        sampling_rate (int): Integer variable containing the value of the audio sampling rate (ex: 16kHz ==> sampling_rate = 16000)
 
     Returns:
         Plots the audio signal, spectrogram and MFCC features as subplots on the same figure in a new window
 
     """
 
+    spectrogram_data = spectrogram_data[~np.all(spectrogram_data == 0, axis=1)]
+    spectrogram_data = np.swapaxes(spectrogram_data, 0, 1)
+
+    mfcc_data = mfcc_data[~np.all(mfcc_data == 0, axis=1)]
+    mfcc_data = np.swapaxes(mfcc_data, 0, 1)
+
     fig, ax = plt.subplots(nrows=3, ncols=1)
     fig.tight_layout()
 
+    print(len(audio_signal))
     ax[0].plot(audio_signal)
     ax[0].set_title('Audio Signal')
+    ax[0].set_xlabel('Sample number')
+    ax[0].set_ylabel('Amplitude')
 
-    ax[1].pcolormesh(spectrogram_data)
+    freq, time = get_spectrogram_params(audio_signal=audio_signal, spectrogram_data=spectrogram_data, sampling_rate=sampling_rate)
+
+    ax[1].pcolormesh(time, freq, spectrogram_data)
     ax[1].set_title('Spectrogram')
     ax[1].set_xlabel('Time [s]')
     ax[1].set_ylabel('Frequency [Hz]')
