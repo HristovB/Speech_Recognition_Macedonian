@@ -26,7 +26,7 @@ def generate_spectrogram(path, sampling_rate, verbose=False):
 
     Parameters:
         path (string): String variable containing the path to the main data folder (containing multiple folders, divided into batches of audio files)
-        sampling_rate (int): Integer variable containing the sampling rate of the audio(ex: 16kHz ==> sampling_rate = 16000)
+        sampling_rate (int): Integer variable containing the value of the audio sampling rate (ex: 16kHz ==> sampling_rate = 16000)
         verbose (bool): Boolean variable to determine whether to print the progress of the function
 
     Returns:
