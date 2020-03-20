@@ -17,6 +17,7 @@ import numpy as np
 from scipy import signal
 import librosa as lb
 from python_speech_features import mfcc
+from utils.utils import get_char_set
 
 
 def find_maximum_batch(path, sampling_rate, method='spectrogram', num_coeff=None, verbose=False):
@@ -289,10 +290,38 @@ def load_transcript(path):
 
     """
 
-    file_name= [file for file in os.listdir(path) if file.endswith('.txt')][0]
+    file_name = [file for file in os.listdir(path) if file.endswith('.txt')][0]
 
     transcript_file = open(path + os.sep + file_name, mode='r', encoding='utf-8')
     batch_transcripts = [line.split(' ', 1)[1] for line in transcript_file.read().split('\n')]
     transcript_file.close()
 
     return batch_transcripts
+
+
+def enumerate_transcript(transcript):
+    """
+    This function is for generating the enumerated array of the audio file transcript represented in textual form.
+
+    Parameters:
+        transcript (string): String variable containing the transcript of an individual audio file
+
+    Returns:
+        transcript_enum (list): List variable containing the enumerated transcript
+
+    """
+
+    whitespace = ' '
+    blank_token = '%'
+    end_token = '>'
+    alphabet = get_char_set() + [whitespace, blank_token, end_token]
+
+    to_index = {}
+    for index, character in enumerate(alphabet):
+        to_index[character] = index
+
+    transcript_enum = []
+    for character in transcript.lower():
+        transcript_enum.append(to_index[character])
+
+    return transcript_enum
