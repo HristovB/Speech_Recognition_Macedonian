@@ -16,6 +16,7 @@
       <w>mfcc</w>
       <w>ndarray</w>
       <w>preprocessing</w>
+      <w>relu</w>
       <w>resample</w>
       <w>resampling</w>
       <w>softmax</w>
